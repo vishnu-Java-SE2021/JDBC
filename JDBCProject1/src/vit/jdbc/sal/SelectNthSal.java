@@ -34,33 +34,18 @@ public class SelectNthSal {
 				nthHighestSal=sc.nextInt();
 			}
 			
-			//Sample query to fetch highest salary from emp table shown below
-			//query="SELECT * FROM EMP WHERE SAL=(SELECT MAX(SAL) FROM EMP)";
+			//Sample query to fetch 4th highest salary from emp table is shown below
+			  // select * from (select * from emp order by sal desc) where rownum<=4
+			  // minus
+			  // select * from (select * from emp order by sal desc) where rownum<=3;
 			
-			query="SELECT EMPNO,ENAME,JOB,SAL FROM EMP WHERE SAL=(SELECT MAX(SAL) FROM EMP";
-			
-			if(nthHighestSal>0) {
-				if(nthHighestSal==1) {
-					query=query+")";
-				}//inner if condition
-			
-				//preparing nthHighest salary query 
-				else{
-					for(int i=1;i<nthHighestSal;i++) 
-						query=query+" WHERE SAL<(SELECT MAX(SAL) FROM EMP";
-					for(int i=1;i<=nthHighestSal;i++)
-						query=query+")";
-					
-						//query prepared and displaying
-						System.out.println();
-						System.out.println("Query :: "+query);
-						System.out.println();
-					}//inner else
-			}else {
-				System.out.println("Wrong input!!..");
-				status=false;
-			}
-			
+			query="SELECT EMPNO,ENAME,JOB,SAL FROM "
+					+ "(SELECT EMPNO,ENAME,JOB,SAL FROM EMP ORDER BY SAL DESC) "
+					+ "WHERE ROWNUM<="+nthHighestSal+" "
+							+ "MINUS "
+					+ "SELECT EMPNO,ENAME,JOB,SAL FROM "
+					+ "(SELECT EMPNO,ENAME,JOB,SAL FROM EMP ORDER BY SAL DESC) "
+					+ "WHERE ROWNUM<="+(nthHighestSal-1);
 			
 			//**JDBC code**
 			
